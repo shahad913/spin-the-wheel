@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Spin the Number Game</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    margin-top: 100px;
+    background: #f0f8ff;
+  }
+  #number {
+    font-size: 100px;
+    color: #333;
+    margin: 30px 0;
+  }
+  button {
+    padding: 15px 30px;
+    font-size: 24px;
+    background: #007bff;
+    border: none;
+    color: white;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  button:hover {
+    background: #0056b3;
+  }
+  #message {
+    margin-top: 20px;
+    font-size: 22px;
+    color: green;
+  }
+  input[type="number"] {
+    font-size: 22px;
+    padding: 5px 10px;
+    width: 80px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+
+<h1>Spin the Number (1 to 50)</h1>
+
+<input type="number" id="guess" placeholder="Guess (1-50)" min="1" max="50" />
+<br/><br/>
+
+<div id="number">0</div>
+
+<button id="spinBtn">Spin</button>
+
+<div id="message"></div>
+
+<script>
+  const numberDisplay = document.getElementById('number');
+  const spinBtn = document.getElementById('spinBtn');
+  const message = document.getElementById('message');
+  const guessInput = document.getElementById('guess');
+
+  function getRandomNumber(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+
+  spinBtn.addEventListener('click', () => {
+    message.textContent = '';
+    spinBtn.disabled = true;
+
+    let count = 0;
+    const maxCount = 30; // spin 30 times (~3 seconds)
+    const minNum = 1;
+    const maxNum = 50;
+
+    const interval = setInterval(() => {
+      const randomNum = getRandomNumber(minNum, maxNum);
+      numberDisplay.textContent = randomNum;
+      count++;
+
+      if (count >= maxCount) {
+        clearInterval(interval);
+        spinBtn.disabled = false;
+
+        // Check guess
+        const guessedNum = parseInt(guessInput.value);
+        if (guessedNum === randomNum) {
+          message.style.color = 'green';
+          message.textContent = "🎉 You guessed it right! Congrats!";
+        } else if (guessedNum >= minNum && guessedNum <= maxNum) {
+          message.style.color = 'red';
+          message.textContent = `Try again! The number was ${randomNum}.`;
+        } else {
+          message.style.color = 'blue';
+          message.textContent = `The number is ${randomNum}. Enter a guess between 1 and 50.`;
+        }
+      }
+    }, 100);
+  });
+</script>
+
+</body>
+</html>
